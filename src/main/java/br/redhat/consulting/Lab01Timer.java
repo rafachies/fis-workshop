@@ -1,11 +1,10 @@
 package br.redhat.consulting;
 
 import org.apache.camel.builder.RouteBuilder;
-import org.springframework.stereotype.Component;
 
 import br.redhat.consulting.util.BodyProcessor;
 
-@Component
+//@Component
 public class Lab01Timer extends RouteBuilder{
 
 	@Override
