@@ -6,6 +6,9 @@ import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import br.redhat.consulting.util.MyBean;
+import br.redhat.consulting.util.Stock;
+
 @Component
 public class Lab02Rest extends RouteBuilder {
 
@@ -17,23 +20,50 @@ public class Lab02Rest extends RouteBuilder {
 			.component("servlet")
 			.port(8080)
 			.contextPath("/workshop")
+			.apiProperty("api.title", "Workshop REST Services")
+			.apiProperty("api.version", "1.0")
+			.apiContextPath("/api-doc")
 			.bindingMode(RestBindingMode.json)
+			.enableCORS(true)
 			.dataFormatProperty("printPretty", "true");
 		
 		rest("/rest")
-			.get("/say").route()
-				.setBody(simple("Hello World"))
+			.description("Serviços Laboratório REST")
+			
+			.get("/bean").route()
+				.bean(MyBean.class, "sayHello()")
 			.endRest()
-			.get("/say/{message}").route()
-				.setBody(simple("Hello ${header.message}"))
+			
+			.get("/say")
+				.id("say")
+				.description("Diz Hello World")
+				.route()
+					.setBody(simple("Hello World"))
+				.end()
 			.endRest()
+			
+			.get("/say/{message}")
+				.id("sayMessage")
+				.responseMessage().code(200).message("Retorno com sucesso").endResponseMessage()
+				.description("Diz Hello para alguém")
+				.param().name("mensagem para hello").endParam()
+				.route()
+					.setBody(simple("Hello ${header.message}"))
+				.end()
+			.endRest()
+			
 			.get("/stock").produces(MediaType.APPLICATION_JSON_VALUE).route()
 				.setBody(constant(STOCK_JSON))
 				.unmarshal().json(JsonLibrary.Jackson)
-			.endRest();
-		
-		
+			.endRest()
 			
+			.post("/stock").type(Stock.class).consumes(MediaType.APPLICATION_JSON_VALUE).produces(MediaType.APPLICATION_JSON_VALUE)
+				.to("direct:postStock");
+		
+			from("direct:postStock")
+				.log("POJO: ${body}")
+				.marshal().json(JsonLibrary.Jackson)
+				.log("JSON: ${body}");
 	}
 
 }
