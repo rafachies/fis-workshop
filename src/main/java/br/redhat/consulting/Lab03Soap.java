@@ -6,6 +6,8 @@ import org.apache.camel.component.cxf.CxfEndpoint;
 import org.springframework.stereotype.Component;
 
 import br.redhat.consulting.soap.IncidentService;
+import br.redhat.consulting.soap.ReportProcessor;
+import br.redhat.consulting.soap.StatusProcessor;
 
 @Component
 public class Lab03Soap extends RouteBuilder {
@@ -15,7 +17,7 @@ public class Lab03Soap extends RouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
-		CxfComponent cxfComponent = new CxfComponent();
+		CxfComponent cxfComponent = new CxfComponent(getContext());
 		CxfEndpoint cxfEndpoint = new CxfEndpoint(SERVER_ADDRESS, cxfComponent);
 		cxfEndpoint.setServiceClass(IncidentService.class);
 		cxfEndpoint.setBeanId("cxfEndpoint");
@@ -24,10 +26,14 @@ public class Lab03Soap extends RouteBuilder {
 			.recipientList()
 			.simple("direct:${header.operationName}");
 		
-		from("direct:report")
-			.log("Report called: ${body}");
+		from("direct:reportIncident")
+			.log("Request: ${body}")
+			.process(new ReportProcessor())
+			.log("Response: ${body}");
 		
-		from("direct:status")
-			.log("Status called: ${body}");
+		from("direct:statusIncident")
+			.log("Request: ${body}")
+			.process(new StatusProcessor())
+			.log("Response: ${body}");
 	}
 }
