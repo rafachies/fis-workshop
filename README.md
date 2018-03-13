@@ -7,6 +7,9 @@
 <b>Senhas:</b> Redhat123$
 
 oc login https://master.na37.openshift.opentlc.com <p>
+  
+<b>oc project !seunome!</b>
+  
 mvn fabric8:deploy <p>
 
 
