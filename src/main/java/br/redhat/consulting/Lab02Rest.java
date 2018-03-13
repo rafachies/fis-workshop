@@ -1,7 +1,6 @@
 package br.redhat.consulting;
 
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -11,8 +10,6 @@ import br.redhat.consulting.util.Stock;
 
 @Component
 public class Lab02Rest extends RouteBuilder {
-
-	private static final String STOCK_JSON = "{\"symbol\":\"rht\", \"name\":\"redhat\", \"price\":\"158\"}";
 
 	@Override
 	public void configure() throws Exception {
@@ -52,18 +49,14 @@ public class Lab02Rest extends RouteBuilder {
 				.end()
 			.endRest()
 			
-			.get("/stock").produces(MediaType.APPLICATION_JSON_VALUE).route()
-				.setBody(constant(STOCK_JSON))
-				.unmarshal().json(JsonLibrary.Jackson)
-			.endRest()
-			
-			.post("/stock").type(Stock.class).consumes(MediaType.APPLICATION_JSON_VALUE).produces(MediaType.APPLICATION_JSON_VALUE)
-				.to("direct:postStock");
+			.post("/stock")
+				.consumes(MediaType.APPLICATION_JSON_VALUE).produces(MediaType.APPLICATION_JSON_VALUE)
+				.type(Stock.class).outType(Stock.class)
+				.route()
+				.log("POST Stock called: ${body.symbol}")
+			.endRest();
 		
-			from("direct:postStock")
-				.log("POJO: ${body}")
-				.marshal().json(JsonLibrary.Jackson)
-				.log("JSON: ${body}");
+				
 	}
 
 }

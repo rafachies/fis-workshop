@@ -2,7 +2,7 @@ package br.redhat.consulting.util;
 
 public class StockUtil {
 
-	public Stock findOne() {
+	public Stock example() {
 		Stock stock = new Stock();
 		stock.setSymbol("FB");
 		stock.setName("Facebook");
