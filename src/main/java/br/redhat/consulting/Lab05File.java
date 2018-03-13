@@ -1,4 +1,4 @@
-package br.redhat.consulting.util;
+package br.redhat.consulting;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
