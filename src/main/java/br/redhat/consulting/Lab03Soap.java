@@ -6,7 +6,6 @@ import org.apache.camel.component.cxf.CxfEndpoint;
 import org.springframework.stereotype.Component;
 
 import br.redhat.consulting.soap.IncidentService;
-import br.redhat.consulting.soap.ReportProcessor;
 import br.redhat.consulting.soap.StatusProcessor;
 
 @Component
@@ -28,12 +27,13 @@ public class Lab03Soap extends RouteBuilder {
 		
 		from("direct:reportIncident")
 			.log("Request: ${body}")
-			.process(new ReportProcessor())
-			.log("Response: ${body}");
+			.to("direct:alertIncident");
 		
 		from("direct:statusIncident")
 			.log("Request: ${body}")
 			.process(new StatusProcessor())
 			.log("Response: ${body}");
+			
+		
 	}
 }

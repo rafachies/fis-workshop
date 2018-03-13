@@ -7,26 +7,30 @@ import org.apache.camel.component.cxf.DataFormat;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import br.redhat.consulting.soap.IncidentService;
 import br.redhat.consulting.util.Currency;
 import br.redhat.consulting.util.GetCurrencyByCountryResponse;
 
 @Component
 public class Lab03Transformation extends RouteBuilder {
 
+	
+	
+	private static final String SERVER_ADDRESS = "http://localhost:8383/workshop/incident";
+
 	@Override
 	public void configure() throws Exception {
-		
-		final String envelope = "<ns1:GetCurrencyByCountry xmlns:ns1='http://www.webserviceX.NET'>\n"
-				+ "  <ns1:CountryName>brazil</ns1:CountryName>\n" + "</ns1:GetCurrencyByCountry>";
-		
-		
 		CxfComponent cxfComponent = new CxfComponent(getContext());
-		CxfEndpoint soapEndpoint = new CxfEndpoint("http://www.webservicex.net/country.asmx", cxfComponent);
-		soapEndpoint.setWsdlURL("http://www.webservicex.net/country.asmx?wsdl");
-		soapEndpoint.setServiceNameString("{http://www.webserviceX.NET}country");
-		soapEndpoint.setPortNameString("{http://www.webserviceX.NET/}countrySoap12");
-		soapEndpoint.setDefaultOperationName("GetCurrencyByCountry");
-		soapEndpoint.setDataFormat(DataFormat.PAYLOAD);
+		CxfEndpoint soapProducer = new CxfEndpoint("http://www.webservicex.net/country.asmx", cxfComponent);
+		soapProducer.setWsdlURL("http://www.webservicex.net/country.asmx?wsdl");
+		soapProducer.setServiceNameString("{http://www.webserviceX.NET}country");
+		soapProducer.setPortNameString("{http://www.webserviceX.NET/}countrySoap12");
+		soapProducer.setDefaultOperationName("GetCurrencyByCountry");
+		soapProducer.setDataFormat(DataFormat.PAYLOAD);
+		
+		CxfEndpoint soapConsumer = new CxfEndpoint(SERVER_ADDRESS, cxfComponent);
+		soapConsumer.setServiceClass(IncidentService.class);
+		soapConsumer.setBeanId("cxfEndpoint");
 		
 		rest("/transformation")
 			.post("/currency").consumes(MediaType.APPLICATION_JSON_VALUE).type(Currency.class).to("direct:getCurrency");
@@ -36,14 +40,9 @@ public class Lab03Transformation extends RouteBuilder {
 			.to("dozer:id?mappingFile=dozer-mapping.xml&sourceModel=br.redhat.consulting.util.Currency&targetModel=br.redhat.consulting.util.GetCurrencyByCountry")
 			.log("Body converted: ${body}")
 			.marshal().jacksonxml(true)
-			.to(soapEndpoint)
+			.to(soapProducer)
 			.unmarshal().jacksonxml(GetCurrencyByCountryResponse.class)
 			.log("SOAP Response: ${body}");
-			
-			
-		
-		
-		
 		
 	}
 
