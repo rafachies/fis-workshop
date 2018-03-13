@@ -1,0 +1,11 @@
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://dozer.sourceforge.net  http://dozer.sourceforge.net/schema/beanmapping.xsd">
+  <mapping>
+    <class-a>br.redhat.consulting.util.Currency</class-a>
+    <class-b>br.redhat.consulting.util.GetCurrencyByCountry</class-b>
+    <field>
+      <a>pais</a>
+      <b>CountryName</b>
+    </field>
+  </mapping>
+</mappings>

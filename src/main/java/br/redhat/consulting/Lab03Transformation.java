@@ -4,7 +4,11 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfComponent;
 import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.cxf.DataFormat;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+
+import br.redhat.consulting.util.Currency;
+import br.redhat.consulting.util.GetCurrencyByCountryResponse;
 
 @Component
 public class Lab03Transformation extends RouteBuilder {
@@ -24,12 +28,19 @@ public class Lab03Transformation extends RouteBuilder {
 		soapEndpoint.setDefaultOperationName("GetCurrencyByCountry");
 		soapEndpoint.setDataFormat(DataFormat.PAYLOAD);
 		
-		from("timer:chies?repeatCount=1&delay=5000")
-			.setBody(constant(envelope))
+		rest("/transformation")
+			.post("/currency").consumes(MediaType.APPLICATION_JSON_VALUE).type(Currency.class).to("direct:getCurrency");
+		
+		
+		from("direct:getCurrency")
+			.to("dozer:id?mappingFile=dozer-mapping.xml&sourceModel=br.redhat.consulting.util.Currency&targetModel=br.redhat.consulting.util.GetCurrencyByCountry")
+			.log("Body converted: ${body}")
+			.marshal().jacksonxml(true)
 			.to(soapEndpoint)
-			.log("SOAP Body Response: ${body}");
-		
-		
+			.unmarshal().jacksonxml(GetCurrencyByCountryResponse.class)
+			.log("SOAP Response: ${body}");
+			
+			
 		
 		
 		
