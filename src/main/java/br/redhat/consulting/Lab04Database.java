@@ -16,10 +16,10 @@ public class Lab04Database extends RouteBuilder {
 			.get("/sql/resultset").to("direct:sql-resultset")
 			.get("/sql/stock/{symbol}").to("direct:sql-singleresult")
 			.post("/jpa/stock").consumes(MediaType.APPLICATION_JSON_VALUE).type(Stock.class).to("direct:jpa-merge")
-			;
+			.post("/transaction").consumes(MediaType.APPLICATION_JSON_VALUE).type(Stock.class).to("direct:transaction");
 		
 		from("direct:sql-count")
-			.to("sql:select count(*) from stock?dataSource=#dataSource&outputType=StreamList")
+			.to("sql:select count(*) from stock?dataSource=#dataSource&outputType=SelectOne")
 			.setBody(simple("Number of stocks: ${body}"));
 		
 		from("direct:sql-resultset")
@@ -33,9 +33,16 @@ public class Lab04Database extends RouteBuilder {
 		from("direct:jpa-merge")
 			.to("jpa:br.redhat.consulting.util.Stock")
 			.setBody(simple("Stock persisted: ${body}"));
+		
+		from("direct:transaction")
+			.transacted()
+			.to("jpa:br.redhat.consulting.util.Stock")
+			.throwException(new RuntimeException())
+			.setBody(simple("Stock persisted: ${body}"));
 	
 		from("jpa://br.redhat.consulting.util.Stock?consumer.namedQuery=Stock.findAll&consumer.delay=5000&consumeDelete=false")
 			.log("Consuming: ${body.symbol}");
+		
 	}
 
 }
