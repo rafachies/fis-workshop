@@ -2,6 +2,14 @@
 
 <b>Rede Wireless:</b> REGUSNETWIFI, senha 80585223
 
+<b>Endereço Openshift: </b>https://master.na37.openshift.opentlc.com
+<b>Usuário:</b> rchies-redhat.com / dilopes-redhat.com
+<b>Senhas:</b> Redhat123$
+
+oc login https://master.na37.openshift.opentlc.com
+mvn fabric8:deploy
+
+
 <b> Serviço SOA Externo:</b> http://www.webservicex.net/country.asmx?wsdl
 
 
