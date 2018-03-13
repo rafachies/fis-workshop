@@ -6,7 +6,7 @@ public class StockUtil {
 		Stock stock = new Stock();
 		stock.setSymbol("FB");
 		stock.setName("Facebook");
-		stock.setPrice(100);
+		stock.setPrice(100l);
 		return stock ;
 	}
 }

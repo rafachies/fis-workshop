@@ -33,7 +33,11 @@ public class Lab03Transformation extends RouteBuilder {
 		soapConsumer.setBeanId("cxfEndpoint");
 		
 		rest("/transformation")
-			.post("/currency").consumes(MediaType.APPLICATION_JSON_VALUE).type(Currency.class).to("direct:getCurrency");
+			.post("/currency")
+				.consumes(MediaType.APPLICATION_JSON_VALUE)
+				.produces(MediaType.APPLICATION_XML_VALUE)
+				.type(Currency.class)
+				.to("direct:getCurrency");
 		
 		
 		from("direct:getCurrency")
@@ -42,7 +46,8 @@ public class Lab03Transformation extends RouteBuilder {
 			.marshal().jacksonxml(true)
 			.to(soapProducer)
 			.unmarshal().jacksonxml(GetCurrencyByCountryResponse.class)
-			.log("SOAP Response: ${body}");
+			.log("SOAP Response: ${body}")
+			;
 		
 	}
 
