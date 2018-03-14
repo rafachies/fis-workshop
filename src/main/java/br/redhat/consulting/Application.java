@@ -17,16 +17,16 @@
 package br.redhat.consulting;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.apache.camel.component.hystrix.metrics.servlet.HystrixEventStreamServlet;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jms.connection.JmsTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
+@EnableTransactionManagement
 public class Application {
 
 	public static void main(String[] args) {
@@ -58,21 +58,4 @@ public class Application {
 		connectionFactory.setPassword("admin");
 		return connectionFactory;
 	}
-
-	@Bean
-	public ActiveMQComponent activeMQComponent(ActiveMQConnectionFactory pooledConnectionFactory, JmsTransactionManager transactionManager) {
-		final ActiveMQComponent activeMQComponent = new ActiveMQComponent();
-		activeMQComponent.setTransacted(true);
-		activeMQComponent.setConnectionFactory(pooledConnectionFactory);
-		activeMQComponent.setTransactionManager(transactionManager);
-		return activeMQComponent;
-	}
-
-	@Bean
-	public JmsTransactionManager jmsTransactionManager(ActiveMQConnectionFactory connectionFactory) {
-		final JmsTransactionManager transactionManager = new JmsTransactionManager();
-		transactionManager.setConnectionFactory(connectionFactory);
-		return transactionManager;
-	}
-
 }
