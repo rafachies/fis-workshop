@@ -16,6 +16,7 @@
  */
 package br.redhat.consulting;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.component.hystrix.metrics.servlet.HystrixEventStreamServlet;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.springframework.boot.SpringApplication;
@@ -47,5 +48,13 @@ public class Application {
 		return new ServletRegistrationBean(new HystrixEventStreamServlet(), "/hystrix.stream");
 	}
 
+	@Bean
+	public ActiveMQConnectionFactory coreConnectionFactory() throws Exception {
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+		connectionFactory.setBrokerURL("tcp://localhost:61616");
+		connectionFactory.setUserName("admin");
+		connectionFactory.setPassword("admin");
+		return connectionFactory;
+	}
 
 }

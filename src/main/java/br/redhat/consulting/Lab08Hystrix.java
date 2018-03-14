@@ -23,6 +23,7 @@ public class Lab08Hystrix extends RouteBuilder {
 			.removeHeaders("CamelHttp*")
 			.hystrix()
 				.hystrixConfiguration(configuration)
+				.log("REST vai ser executado.")
 				.to("http4:myphp-php-chies.apps.paas.rhbrlab.com?httpMethod=GET")
 				.log("REST call executed")
 			.onFallback()
