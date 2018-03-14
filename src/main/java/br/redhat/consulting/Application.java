@@ -16,6 +16,7 @@
  */
 package br.redhat.consulting;
 
+import org.apache.camel.component.hystrix.metrics.servlet.HystrixEventStreamServlet;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,4 +36,16 @@ public class Application {
 		servlet.setName("CamelServlet");
 		return servlet;
 	}
+
+	@Bean
+	public HystrixEventStreamServlet hystrixServlet() {
+		return new HystrixEventStreamServlet();
+	}
+
+	@Bean
+	public ServletRegistrationBean hystrixRegistrationBean() {
+		return new ServletRegistrationBean(new HystrixEventStreamServlet(), "/hystrix.stream");
+	}
+
+
 }
