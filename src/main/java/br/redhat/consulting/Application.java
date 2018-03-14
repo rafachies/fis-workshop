@@ -35,5 +35,4 @@ public class Application {
 		servlet.setName("CamelServlet");
 		return servlet;
 	}
-
 }
