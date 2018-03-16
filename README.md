@@ -1,21 +1,5 @@
 <h1>FIS Workshop</h1>
 
-<b>Rede Wireless:</b> REGUSNETWIFI, senha 80585223
-
-<b>Endereço Openshift: </b>https://master.na37.openshift.opentlc.com
-<b>Usuário:</b> rchies-redhat.com / dilopes-redhat.com<p>
-<b>Senhas:</b> Redhat123$
-
-oc login https://master.na37.openshift.opentlc.com <p>
-  
-<b>oc project !seunome!</b>
-  
-mvn fabric8:deploy <p>
-
-
-<b> Serviço SOA Externo:</b> http://www.webservicex.net/country.asmx?wsdl
-
-
 <h2>Roteiro do Workshop</h2>
 
 <h3> LAB01 </h3>
