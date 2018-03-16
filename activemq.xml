@@ -44,8 +44,8 @@
                   </pendingMessageLimitStrategy>
                 </policyEntry>
                 <policyEntry queue=">" producerFlowControl="true" memoryLimit="10mb" advisoryWhenFull="true">
-			<deadLetterStrategy>  
-                    	<individualDeadLetterStrategy queuePrefix="DLQ." useQueueForQueueMessages="true"/>
+					<deadLetterStrategy>  
+                    		<individualDeadLetterStrategy queuePrefix="DLQ." useQueueForQueueMessages="true"/>
                   	</deadLetterStrategy>
                 </policyEntry>
               </policyEntries>

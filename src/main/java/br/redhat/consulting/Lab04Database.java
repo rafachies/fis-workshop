@@ -44,5 +44,4 @@ public class Lab04Database extends RouteBuilder {
 			.log("Consuming: ${body.symbol}");
 		
 	}
-
 }

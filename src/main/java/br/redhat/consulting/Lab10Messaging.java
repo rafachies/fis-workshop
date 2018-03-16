@@ -1,7 +1,6 @@
 package br.redhat.consulting;
 
 import org.apache.camel.builder.RouteBuilder;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,10 +11,9 @@ public class Lab10Messaging extends RouteBuilder {
 		
 		rest("/amq")
 			.get("/queue/{message}").to("direct:sendQueue")
-			.post("/queue").consumes(MediaType.APPLICATION_JSON_VALUE).to("direct:sendJson")
 			.get("/topic/{message}").to("direct:sendTopic");
 		
-		// testing sending and consuming queue
+		// testing sending and consuming from queue
 		from("direct:sendQueue")
 			.setBody(simple("${header.message}"))
 			.to("activemq:queue:redhat?exchangePattern=InOnly")
@@ -26,31 +24,17 @@ public class Lab10Messaging extends RouteBuilder {
 			.throwException(new RuntimeException());
 		
 		
+		//testing sending and consuming from topic
 		from("direct:sendTopic")
 			.setBody(simple("${header.message}"))
 			.to("activemq:topic:jboss?exchangePattern=InOnly");
 		
-		//Two clientes expecting a topic message
-		from("activemq:topic:jboss")
+		from("activemq:topic:jboss?clientId=lopes")
 			.routeId("lopes")
 			.log("Message received: ${body}");
 		
 		from("activemq:topic:jboss?clientId=chies&durableSubscriptionName=chies")
 			.routeId("chies")
 			.log("Message received: ${body}");
-		
-		
-		
-		
-		
-		//Testing with Json
-//		from("direct:sendJson")
-//			.to("activemq:queue:stock?exchangePattern=InOnly");
-//		
-//		from("activemq:queue:stock")
-//			.unmarshal().json(JsonLibrary.Jackson, Stock.class)
-//			.log("Message received: ${body}");
-		
-		
 	}
 }

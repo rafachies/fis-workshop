@@ -18,7 +18,6 @@ public class Lab08Hystrix extends RouteBuilder {
 		rest("/hystrix")
 			.get("/").to("direct:hystrix");
 			
-		
 		from("direct:hystrix")
 			.removeHeaders("CamelHttp*")
 			.hystrix()
@@ -29,8 +28,5 @@ public class Lab08Hystrix extends RouteBuilder {
 			.onFallback()
 				.log("Circuit is open, man!")
 			.end();
-			
-				
-			
 	}
 }

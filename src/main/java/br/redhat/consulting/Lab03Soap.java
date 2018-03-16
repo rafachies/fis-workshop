@@ -11,7 +11,6 @@ import br.redhat.consulting.soap.StatusProcessor;
 @Component
 public class Lab03Soap extends RouteBuilder {
 
-
 	private static final String SERVER_ADDRESS = "http://localhost:8383/workshop/incident";
 
 	@Override
@@ -33,7 +32,5 @@ public class Lab03Soap extends RouteBuilder {
 			.log("Request: ${body}")
 			.process(new StatusProcessor())
 			.log("Response: ${body}");
-			
-		
 	}
 }

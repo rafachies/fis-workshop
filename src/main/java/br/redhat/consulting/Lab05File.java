@@ -15,7 +15,6 @@ public class Lab05File extends RouteBuilder {
 			.otherwise()
 				.to("file:files/live/cheap/")
 		.endChoice();
-
 	}
 
 }

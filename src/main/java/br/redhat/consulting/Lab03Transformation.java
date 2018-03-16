@@ -13,8 +13,6 @@ import br.redhat.consulting.util.GetCurrencyByCountryResponse;
 
 @Component
 public class Lab03Transformation extends RouteBuilder {
-
-	
 	
 	private static final String SERVER_ADDRESS = "http://localhost:8383/workshop/incident";
 
@@ -39,17 +37,12 @@ public class Lab03Transformation extends RouteBuilder {
 				.type(Currency.class)
 				.to("direct:getCurrency");
 		
-		
 		from("direct:getCurrency")
 			.to("dozer:id?mappingFile=dozer-mapping.xml&sourceModel=br.redhat.consulting.util.Currency&targetModel=br.redhat.consulting.util.GetCurrencyByCountry")
 			.log("Body converted: ${body}")
 			.marshal().jacksonxml(true)
 			.to(soapProducer)
 			.unmarshal().jacksonxml(GetCurrencyByCountryResponse.class)
-			.log("SOAP Response: ${body}")
-			;
-		
+			.log("SOAP Response: ${body}");
 	}
-
-
 }

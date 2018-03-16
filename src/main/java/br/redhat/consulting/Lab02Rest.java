@@ -55,8 +55,5 @@ public class Lab02Rest extends RouteBuilder {
 				.route()
 				.log("POST Stock called: ${body.symbol}")
 			.endRest();
-		
-				
 	}
-
 }
